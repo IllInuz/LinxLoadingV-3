@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading</title> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .server-name {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+        }
+
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.6) grayscale(30%);
+            transition: all 0.5s ease;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .loading-text {
+            text-align: center;
+            font-size: 1rem;
+            margin-top: 1rem;
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .status-message {
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            margin: 0 2px;
+            animation: pulse 1.4s infinite;
+        }
+
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <img id="backgroundImage" class="background-image" alt="Background">
+        
+
+        <div id="particles-js" class="particles-js"></div>
+        <div class="content-wrapper">
+            <div class="logo-container">
+                <img src="./logo.png" alt="Server Logo">
+            </div>
+            <h1 class="server-name">Servername CHANGEME</h1> /* Set your server name here */
+            
+            <div class="loading-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="loading-text" id="loading-text">
+                Initializing...
+                <div class="loading-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </div>
+            </div>
+            
+            <p class="status-message">Check out our Discord for News, Rules, Guidelines, and more!</p>
+        </div>
+    </div>
+
+    <audio id="leson" autoplay loop></audio>
+
+    <script>
+        // Background Images Array change to yoir liking..
+        const images = [
+            "https://wallpapercave.com/wp/wp9047134.jpg",
+            "https://wallpapers.com/images/hd/gta-5-1920x1080-bd8s5s47jh2gyl4s.jpg",
+            "https://wallpapercave.com/wp/wp9047188.jpg",
+            "https://i.pinimg.com/originals/cf/47/08/cf4708cc226918db2457d099341342d1.jpg",
+            "https://www.gamespot.com/a/uploads/original/1690/16904437/4008784-screenshot2022-07-22at10.20.20am.jpg"
+        ];
+
+        // Loading State Variables
+        let currentStage = 0;
+        let progress = 0;
+        let isFiveMLoading = true;
+        let fivemCount = 0;
+        let fivemThisCount = 0;
+        let scriptTimeout = null;
+
+        // Simulate loading process edit these lines to your liking..
+        const customStages = [
+        { text: "Flawless is munching data packets...", duration: 2000 },
+        { text: "Lorenc's code optimization underway...", duration: 2000 },
+        { text: "Loading map assets... Expecting zero traffic!", duration: 2500 },
+        { text: "Synchronizing radio chatter...", duration: 1500 },
+        { text: "Whomsky double-checking weapon systems...", duration: 2000 },
+        { text: "Refreshing civilian job board...", duration: 3000 },
+        { text: "Testing law enforcement’s patience...", duration: 1000 },
+        { text: "Processing secret Lorenc debug codes...", duration: 2000 },
+        { text: "Injecting chaotic weather patterns...", duration: 1200 },
+        { text: "Loading snacks for database hamsters...", duration: 2000 },
+        { text: "Organizing player inventory alphabetically...", duration: 1500 },
+        { text: "Calibrating vehicle speedometers...", duration: 1800 },
+        { text: "Preparing world boundaries... don't wander too far!", duration: 2000 },
+        { text: "Checking radio for static...", duration: 1000 },
+        { text: "Loading emergency vehicle sirens...", duration: 2000 },
+        { text: "Processing in-game memes...", duration: 1200 },
+        { text: "Connecting to Zee's secret network...", duration: 1800 },
+        { text: "Injecting special player abilities...", duration: 2000 },
+        { text: "Fueling inventory with items...", duration: 2500 },
+        { text: "Inspecting road conditions...", duration: 1500 },
+        { text: "Configuring NPC personalities...", duration: 1300 },
+        { text: "Recalibrating player stats...", duration: 2000 },
+        { text: "Charging the sun... almost bright enough!", duration: 1500 },
+        { text: "Populating police databases...", duration: 2000 },
+        { text: "Setting up player-spawn points...", duration: 1600 },
+        { text: "Vivi4n is debugging the mainframe...", duration: 1800 },
+      ];
+        const handlers = {
+            startInitFunctionOrder(data) {
+                fivemCount = data.count;
+                updateLoadingText("Starting game functions...");
+            },
+
+            initFunctionInvoking(data) {
+                updateProgress((data.idx / fivemCount) * 100);
+                updateLoadingText("Initializing game function " + data.name);
+                
+                if (scriptTimeout) {
+                    clearTimeout(scriptTimeout);
+                }
+
+                scriptTimeout = setTimeout(() => {
+                    if (isFiveMLoading) {
+                        isFiveMLoading = false;
+                        startCustomLoading();
+                    }
+                }, 5000); // 5 second timeout
+            },
+
+            startDataFileEntries(data) {
+                fivemCount = data.count;
+                updateLoadingText("Loading game files...");
+            },
+
+            performMapLoadFunction(data) {
+                ++fivemThisCount;
+                updateProgress((fivemThisCount / fivemCount) * 100);
+                updateLoadingText("Loading map data...");
+
+                if (fivemThisCount === fivemCount) {
+                    isFiveMLoading = false;
+                    startCustomLoading();
+                }
+            },
+
+            onLogLine(data) {
+                if (data.message && data.message.toLowerCase().includes("awaiting scripts")) {
+                    isFiveMLoading = false;
+                    startCustomLoading();
+                    return;
+                }
+                
+                updateLoadingText(data.message);
+            }
+        };
+
+        function startCustomLoading() {
+            if (currentStage < customStages.length) {
+                const stage = customStages[currentStage];
+                updateLoadingText(stage.text);
+                progress = (currentStage + 1) * (100 / customStages.length);
+                updateProgress(progress);
+
+                setTimeout(() => {
+                    currentStage++;
+                    startCustomLoading();
+                }, stage.duration);
+            } else {
+                updateLoadingText("Loading complete!");
+                updateProgress(100);
+                
+                setTimeout(() => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'https://LoadingScreen/loadingscreenComplete', true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onerror = function() {
+                        console.log('Expected callback error - this is normal');
+                    };
+                    xhr.send(JSON.stringify({}));
+                }, 1000);
+            }
+        }
+
+        function updateLoadingText(text) {
+            document.getElementById("loading-text").innerHTML = text + 
+                '<div class="loading-dots"><span>.</span><span>.</span><span>.</span></div>';
+        }
+
+        function updateProgress(value) {
+            document.getElementById("progress").style.width = value + '%';
+        }
+
+        window.addEventListener('message', function(e) {
+            (handlers[e.data.eventName] || function() {})(e.data);
+        });
+
+        let play = true;
+        window.addEventListener("keydown", (event) => {
+            if (event.keyCode === 32) {
+                play ? myAudio.pause() : myAudio.play();
+                play = !play;
+            }
+        });
+
+        document.getElementById("backgroundImage").src = images[Math.floor(Math.random() * images.length)];
+        const myAudio = document.getElementById("leson");
+        myAudio.src = "EDITME"; //change the song here just edit the url to any .mp3 url.
+        myAudio.currentTime = 20;
+        myAudio.volume = 0.16;
+    </script>
+
+    <script src="particles.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
