@@ -12,7 +12,7 @@ A customizable, open-source loading screen for FiveM servers featuring dynamic b
 ## Installation
 1. Download the latest release
 2. Extract to your resources folder
-3. Add `ensure LinxLoadingscreen` to your server.cfg
+3. Add `ensure Loadingscreen` to your server.cfg
 
 ## Configuration Guide
 
