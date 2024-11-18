@@ -1,34 +1,55 @@
-# LinxLoadingV3
+# LinxLoadingscreen V3
+
+A customizable, open-source loading screen for FiveM servers featuring dynamic backgrounds, custom loading messages, and audio support.
+
 ## Features
+- Dynamic background image rotation
+- Customizable loading messages with timing control
+- Audio playback support
+- Custom logo support
+- Smooth transitions with controlled loading delay
 
-- Simple, yet effective and neat looking loading screen.
-- Very easy setup.
+## Installation
+1. Download the latest release
+2. Extract to your resources folder
+3. Add `ensure LinxLoadingscreen` to your server.cfg
 
->To modify the logo just replace the existing html/logo.png.
->Resolution is 96x96 pixels.
+## Configuration Guide
 
-## Changing the song.
-To replace the song, simply head in to the html/index.html file and navigate to line:
-```
-66)			<audio id="leson" src="Your music link here.mp3" autoplay="true" hidden="true" loop="true" />
-```
-> Simply replace the src="" with a direct MP3 link.
-
-To change the background video its also simple.
-head in to the html/index.html file and navigate to line:
-```
-62)			src="https://www.youtube.com/embed/SFX78YRGy0E?controls=0&amp;showinfo=0&amp;rel=0&amp;autoplay=1&amp;loop=1&amp;mute=1"
-```
-
-> Change the src= src="https://www.youtube.com/embed/SFX78YRGy0E? part to your youtube embed link.
-
-this does not work on all youtube videos.
-To get the embed link simply find a video, click on share > embed abd cioy tge enved src part from the iframe.
-example:
-
-```
-<iframe width="560" height="315" src="https://www.youtube.com/embed/RXLzvo6kvVQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+### Audio Setup
+Navigate to `html/index.html`, find line 311:
+```javascript
+myAudio.src = "EDITME";
+// Replace with your MP3 URL
+myAudio.src = "https://example.com/your-audio.mp3";
 ```
 
-- the src link would be https://www.youtube.com/embed/RXLzvo6kvVQ
-Simply replace line 62 with that to change the background video.
+### Logo Customization
+Replace the logo file in the HTML folder with your custom PNG file.
+
+### Background Images
+In `html/index.html`, find line 167:
+```javascript
+const images = [
+    "https://wallpapercave.com/wp/wp9047134.jpg",
+    "https://wallpapers.com/images/hd/gta-5-1920x1080-bd8s5s47jh2gyl4s.jpg",
+    // Add more URLs as needed
+];
+```
+
+### Loading Messages
+Modify the custom stages in `html/index.html` at line 184:
+```javascript
+const customStages = [
+    { text: "Your custom message...", duration: 2000 },
+    { text: "Another message...", duration: 1500 },
+    // Duration in milliseconds
+];
+```
+
+## Contributing
+Pull requests are welcome for bug fixes and improvements.
+
+
+## Credits
+Created by Lorenc
